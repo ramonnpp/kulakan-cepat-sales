@@ -63,4 +63,12 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Transaction::class, 'id_customer', 'id_customer')->where('status', 'FINISH');
     }
+
+    /**
+     * Relasi BARU: Catatan kunjungan untuk pelanggan ini.
+     */
+    public function visitNotes()
+    {
+        return $this->hasMany(CustomerVisitNote::class, 'id_customer', 'id_customer')->orderBy('created_at', 'desc');
+    }
 }

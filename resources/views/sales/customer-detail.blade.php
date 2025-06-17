@@ -7,26 +7,24 @@
         <div class="flex items-center mb-4">
             <div class="flex-shrink-0">
                 <img class="h-16 w-16 rounded-full" src="https://via.placeholder.com/150/0000FF/FFFFFF?text=TA"
-                    alt="Toko Abadi">
+                    alt="{{ $customer->name_store }}">
             </div>
             <div class="ml-4">
-                <h2 class="text-2xl font-semibold text-gray-800">Toko Jaya Abadi</h2>
-                <p class="text-gray-600">ID Pelanggan: CUST001</p>
+                <h2 class="text-2xl font-semibold text-gray-800">{{ $customer->name_store }}</h2>
+                <p class="text-gray-600">ID Pelanggan: {{ $customer->id_customer }}</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
             <div>
                 <p class="font-semibold">Info Kontak:</p>
-                <p>Nama PIC: Pak Budi</p>
-                <p>Telepon: 0812-3456-7890</p>
-                <p>Email: budi@jayaabadi.com</p>
+                <p>Nama Owner: {{ $customer->name_owner }}</p>
+                <p>Telepon: {{ $customer->no_phone }}</p>
+                <p>Email: {{ $customer->email }}</p>
             </div>
             <div>
                 <p class="font-semibold">Alamat:</p>
-                <p>Jl. Merdeka No. 10</p>
-                <p>RT 01 RW 02, Kel. Sukamaju, Kec. Cempaka Putih</p>
-                <p>Jakarta Pusat, 10510</p>
+                <p>{{ $customer->address }}</p>
             </div>
         </div>
     </div>
@@ -70,36 +68,54 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">ORD00123</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-06-10</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Rp 5.000.000</td>
-                            <td class="px-6 py-4 whitespace-nowrap"><span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Selesai</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><a href="#"
-                                    class="text-blue-600 hover:text-blue-900">Lihat</a></td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">ORD00122</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-05-20</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Rp 3.500.000</td>
-                            <td class="px-6 py-4 whitespace-nowrap"><span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Selesai</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><a href="#"
-                                    class="text-blue-600 hover:text-blue-900">Lihat</a></td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">ORD00121</td>
-                            <td class="px-6 py-4 whitespace-nowrap">2025-04-01</td>
-                            <td class="px-6 py-4 whitespace-nowrap">Rp 2.000.000</td>
-                            <td class="px-6 py-4 whitespace-nowrap"><span
-                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Dibatalkan</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><a href="#"
-                                    class="text-blue-600 hover:text-blue-900">Lihat</a></td>
-                        </tr>
+                        @forelse ($customer->transactions as $transaction)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $transaction->id_transaction }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $transaction->date_transaction->format('Y-m-d') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">Rp
+                                    {{ number_format($transaction->total_price, 0, ',', '.') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $statusClass = '';
+                                        switch ($transaction->status) {
+                                            case 'FINISH':
+                                                $statusClass = 'bg-green-100 text-green-800';
+                                                break;
+                                            case 'CANCEL':
+                                                $statusClass = 'bg-red-100 text-red-800';
+                                                break;
+                                            case 'PROCESS':
+                                                $statusClass = 'bg-blue-100 text-blue-800';
+                                                break;
+                                            case 'WAITING_CONFIRMATION':
+                                                $statusClass = 'bg-yellow-100 text-yellow-800';
+                                                break;
+                                            case 'SEND':
+                                                $statusClass = 'bg-purple-100 text-purple-800';
+                                                break;
+                                            default:
+                                                $statusClass = 'bg-gray-100 text-gray-800';
+                                                break;
+                                        }
+                                    @endphp
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
+                                        {{ str_replace('_', ' ', $transaction->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-blue-600 hover:text-blue-900">Lihat</a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada riwayat pesanan.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -108,38 +124,78 @@
         <div id="content-produk-favorit" class="py-6 hidden">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Produk Paling Sering Dibeli</h3>
             <ul class="list-disc list-inside text-gray-700 space-y-2">
-                <li>Sabun Cair Wangi (250 unit)</li>
-                <li>Pembersih Lantai Super (180 unit)</li>
-                <li>Shampoo Anti Ketombe (150 unit)</li>
+                @forelse ($mostBoughtProducts as $product)
+                    <li>{{ $product->name_product }} ({{ $product->total_quantity }} unit)</li>
+                @empty
+                    <li>Tidak ada produk favorit yang tercatat.</li>
+                @endforelse
             </ul>
         </div>
 
         <div id="content-catatan-kunjungan" class="py-6 hidden">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Catatan Kunjungan</h3>
             <div class="space-y-4 mb-6">
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <p class="text-sm text-gray-500 mb-2">2025-06-12 | Interaksi Telepon</p>
-                    <p class="text-gray-800">Pak Budi berencana membuka cabang baru bulan depan di area Pondok Indah.
-                        Meminta penawaran khusus untuk produk X dan Y.</p>
-                </div>
-                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <p class="text-sm text-gray-500 mb-2">2025-06-05 | Kunjungan Langsung</p>
-                    <p class="text-gray-800">Ibu Siti menanyakan promo Lebaran yang akan datang. Perlu dikirimkan katalog
-                        promo terbaru via WhatsApp.</p>
-                </div>
+                @forelse ($customer->visitNotes as $note)
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-500 mb-2">
+                            {{ $note->created_at->format('Y-m-d H:i') }} |
+                            {{ $note->interaction_type }}
+                            @if ($note->salesPerson)
+                                ({{ $note->salesPerson->name }})
+                            @endif
+                        </p>
+                        <p class="text-gray-800">{{ $note->note_text }}</p>
+                    </div>
+                @empty
+                    <p class="text-gray-500">Belum ada catatan kunjungan untuk pelanggan ini.</p>
+                @endforelse
             </div>
-            <button class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-200">Tambah
+            <button id="show_add_note_form_button"
+                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-200">Tambah
                 Catatan Baru</button>
 
             <div id="add_note_form" class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 hidden">
                 <h3 class="text-lg font-semibold text-blue-800 mb-3">Tambah Catatan Kunjungan Baru</h3>
-                <textarea class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 mb-3"
-                    rows="4" placeholder="Tulis catatan Anda di sini..."></textarea>
-                <div class="flex justify-end gap-2">
-                    <button class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
-                        onclick="document.getElementById('add_note_form').classList.add('hidden')">Batal</button>
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan Catatan</button>
-                </div>
+                <form action="{{ route('customer.storeVisitNote', ['id' => $customer->id_customer]) }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="interaction_type" class="block text-sm font-medium text-gray-700 mb-1">Tipe
+                            Interaksi:</label>
+                        <select name="interaction_type" id="interaction_type" required
+                            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 @error('interaction_type') border-red-500 @enderror">
+                            <option value="">Pilih Tipe Interaksi</option>
+                            <option value="Kunjungan Langsung"
+                                {{ old('interaction_type') == 'Kunjungan Langsung' ? 'selected' : '' }}>Kunjungan Langsung
+                            </option>
+                            <option value="Telepon" {{ old('interaction_type') == 'Telepon' ? 'selected' : '' }}>Telepon
+                            </option>
+                            <option value="Email" {{ old('interaction_type') == 'Email' ? 'selected' : '' }}>Email
+                            </option>
+                            <option value="WhatsApp" {{ old('interaction_type') == 'WhatsApp' ? 'selected' : '' }}>WhatsApp
+                            </option>
+                            <option value="Lainnya" {{ old('interaction_type') == 'Lainnya' ? 'selected' : '' }}>Lainnya
+                            </option>
+                        </select>
+                        @error('interaction_type')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="note_text" class="block text-sm font-medium text-gray-700 mb-1">Catatan:</label>
+                        <textarea name="note_text" id="note_text"
+                            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 @error('note_text') border-red-500 @enderror"
+                            rows="4" placeholder="Tulis catatan Anda di sini..." required>{{ old('note_text') }}</textarea>
+                        @error('note_text')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
+                            onclick="document.getElementById('add_note_form').classList.add('hidden'); document.getElementById('show_add_note_form_button').classList.remove('hidden');">Batal</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Simpan
+                            Catatan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -187,13 +243,22 @@
             });
 
             // Toggle add note form
-            const addNoteButton = document.querySelector('#content-catatan-kunjungan button.bg-green-600');
+            const showAddNoteFormButton = document.getElementById('show_add_note_form_button');
             const addNoteForm = document.getElementById('add_note_form');
-            if (addNoteButton && addNoteForm) {
-                addNoteButton.addEventListener('click', function() {
+            if (showAddNoteFormButton && addNoteForm) {
+                showAddNoteFormButton.addEventListener('click', function() {
                     addNoteForm.classList.remove('hidden');
+                    this.classList.add('hidden'); // Hide the add button
                 });
             }
+
+            // If there's an error from form submission, show the form and activate the tab
+            @if ($errors->any() || (session('error') && old('note_text'))) // Changed 'note' to 'note_text'
+                document.getElementById('content-catatan-kunjungan').classList.remove('hidden');
+                document.getElementById('add_note_form').classList.remove('hidden');
+                document.getElementById('show_add_note_form_button').classList.add('hidden');
+                showContent('tab-catatan-kunjungan');
+            @endif
         });
     </script>
 @endpush

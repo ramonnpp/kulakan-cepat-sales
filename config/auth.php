@@ -112,4 +112,28 @@ return [
 
     'password_timeout' => 10800,
 
+
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'sales' => [ // Add this guard
+            'driver' => 'session',
+            'provider' => 'sales',
+        ],
+    ],
+
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'sales' => [ // Add this provider
+            'driver' => 'eloquent',
+            'model' => App\Models\Sales::class,
+        ],
+    ],
+
+
 ];

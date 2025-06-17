@@ -19,13 +19,6 @@
                     </svg>
                 </button>
 
-                <!-- Logo untuk Header (Gambar Logo) -->
-                <div class="flex items-center group">
-                    <div class="ml-5 hidden sm:block">
-                        <img class="h-20 w-auto transition-transform duration-300 group-hover:scale-105"
-                            src="{{ asset('img/Logo Kulakan/1x/Artboard 1.png') }}" alt="KulakanCepat Logo">
-                    </div>
-                </div>
             </div>
 
             <!-- Center Section (Tetap minimalis) -->
