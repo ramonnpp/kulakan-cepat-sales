@@ -11,7 +11,7 @@
             <!-- Left Section: Sidebar Toggle & Logo -->
             <div class="flex items-center space-x-4">
                 <button id="sidebar-toggle"
-                    class="lg:hidden p-3 rounded-xl bg-red-800 text-white hover:bg-red-700 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                    class="lg:hidden p-3 rounded-xl bg-white-800 text-white hover:bg-red-700 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                     aria-controls="sidebar" aria-expanded="false">
                     <span class="sr-only">Buka sidebar</span>
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">

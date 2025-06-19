@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Sales;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
-use App\Models\CustomerVisitNote;
+use App\Models\CustomerVisitNote; // ADD THIS LINE
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -65,11 +65,7 @@ class SalesController extends Controller
      */
     public function createLead()
     {
-        // Mengambil semua customer dari database
-        // Anda bisa menambahkan filter atau pagination jika daftar customer sangat banyak
-        $customers = Customer::orderBy('name_store')->get(); // Mengambil semua customer, diurutkan berdasarkan nama toko
-
-        return view('sales.leads', compact('customers')); // Meneruskan data customer ke view
+        return view('sales.leads');
     }
 
     /**
@@ -112,7 +108,7 @@ class SalesController extends Controller
     public function show($id)
     {
         // Load customer with their transactions, transaction details, products, AND visit notes
-        $customer = Customer::with(['transactions.details.product', 'visitNotes'])->findOrFail($id);
+        $customer = Customer::with(['transactions.details.product', 'visitNotes'])->findOrFail($id); // MODIFIED THIS LINE
 
         // Eloquent method to get most bought products
         $mostBoughtProducts = $customer->transactions()
@@ -134,8 +130,8 @@ class SalesController extends Controller
     public function storeVisitNote(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'note_text' => 'required|string|max:1000',
-            'interaction_type' => 'required|string|max:255',
+            'note_text' => 'required|string|max:1000', // Changed name from 'note' to 'note_text'
+            'interaction_type' => 'required|string|max:255', // New field for interaction type
         ]);
 
         try {
@@ -151,35 +147,6 @@ class SalesController extends Controller
             return redirect()->back()->with('success', 'Catatan kunjungan berhasil ditambahkan.');
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Gagal menambahkan catatan kunjungan: ' . $e->getMessage());
-        }
-    }
-
-    // BARU: Metode untuk mengedit status customer
-    public function editStatus($id)
-    {
-        $customer = Customer::findOrFail($id); // Temukan customer berdasarkan ID
-        $statuses = ['PENDING_APPROVE', 'ACTIVE', 'INACTIVE']; // Daftar status yang tersedia (sesuai migrasi customer table)
-
-        return view('sales.edit-customer-status', compact('customer', 'statuses')); // Tampilkan form edit status
-    }
-
-    // BARU: Metode untuk memperbarui status customer
-    public function updateStatus(Request $request, $id)
-    {
-        $customer = Customer::findOrFail($id); // Temukan customer berdasarkan ID
-
-        // Validasi input status
-        $validatedData = $request->validate([
-            'status' => ['required', 'string', Rule::in(['PENDING_APPROVE', 'ACTIVE', 'INACTIVE'])], // Pastikan status sesuai dengan enum di DB
-        ]);
-
-        try {
-            $customer->status = $validatedData['status']; // Update status customer
-            $customer->save(); // Simpan perubahan ke database
-
-            return redirect()->route('customers.index')->with('success', 'Status pelanggan berhasil diperbarui!'); // Redirect kembali ke daftar customer
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui status pelanggan: ' . $e->getMessage()); // Tangani error
         }
     }
 }

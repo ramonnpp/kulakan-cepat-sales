@@ -1,4 +1,3 @@
-{{-- File: resources/views/auth/login.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
 
@@ -12,7 +11,6 @@
 <body class="bg-gradient-to-b from-[#B8182D] to-[#520B14] min-h-screen flex items-center justify-center">
     <div class="flex min-h-screen w-full">
 
-        <!-- Left Panel -->
         <div class="w-1/2 flex-col justify-center pl-20 text-white hidden md:flex">
             <div class="flex items-center gap-4 mb-2">
                 <img src="{{ asset('img/Logo Kulakan/1x/Artboard 1 copy 3.png') }}" alt="Logo" class="w-40 h-40" />
@@ -21,9 +19,10 @@
             <p class="text-5xl font-bold leading-tight">Solusi mudah untuk <br />belanja grosir</p>
         </div>
 
-        <!-- Right Panel (Form) -->
         <div class="w-full md:w-1/2 flex items-center justify-center p-4 sm:p-20">
-            <form method="POST" action="" class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md text-center">
+            {{-- CHANGE: Form action updated to explicitly use the named route --}}
+            <form method="POST" action="{{ route('sales.login') }}"
+                class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md text-center">
                 @csrf
 
                 <h2 class="text-2xl font-semibold text-gray-800 mb-6">Login Sales</h2>
