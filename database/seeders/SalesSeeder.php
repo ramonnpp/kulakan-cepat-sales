@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Sales; // Import the Sales model
-use Illuminate\Support\Facades\Hash; // For hashing passwords
+use App\Models\Sales;
+use Illuminate\Support\Facades\Hash;
 
 class SalesSeeder extends Seeder
 {
@@ -15,29 +15,13 @@ class SalesSeeder extends Seeder
     public function run(): void
     {
         Sales::create([
-            'name' => 'Budi Sales',
-            'email' => 'budi@sales.com',
+            'name' => 'Admin Sales',
+            'email' => 'sales@gmail.com',
             'no_phone' => '081234567890',
-            'password' => Hash::make('password123'), // Use a strong password in production
-            'target_sales' => 10000000.00,
-            'wilayah' => 'Jakarta Barat',
+            'password' => 'sales',
+            'target_sales' => 50000000,
+            'wilayah' => 'Jakarta',
             'status' => 'Aktif',
-            'created' => now(),
-            'updated' => now(),
         ]);
-
-        Sales::create([
-            'name' => 'Siti Sales',
-            'email' => 'siti@sales.com',
-            'no_phone' => '087654321098',
-            'password' => Hash::make('password123'), // Use a strong password in production
-            'target_sales' => 15000000.00,
-            'wilayah' => 'Jakarta Timur',
-            'status' => 'Aktif',
-            'created' => now(),
-            'updated' => now(),
-        ]);
-
-        // Add more sales records as needed
     }
 }
