@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Sales;
@@ -14,14 +15,24 @@ class SalesSeeder extends Seeder
      */
     public function run(): void
     {
-        Sales::create([
-            'name' => 'Admin Sales',
-            'email' => 'sales@gmail.com',
-            'no_phone' => '081234567890',
-            'password' => 'sales',
-            'target_sales' => 50000000,
-            'wilayah' => 'Jakarta',
-            'status' => 'Aktif',
+        // Sales::create([
+        //     'name' => 'Ramon Putro Prakoso',
+        //     'email' => 'ramon@gmail.com',
+        //     'no_phone' => '08123456789',
+        //     'password' => 'ramon',
+        //     'target_sales' => 50000000,
+        //     'wilayah' => 'Yogyakarta',
+        //     'status' => 'Aktif',
+        // ]);
+        Customer::create([
+            'name_store' => 'TOKO IPUL',
+            'name_owner' => 'ipul',
+            'email' => 'ipul@gmail.com',
+            'no_phone' => '08123456789',
+            'password' => 'ipul',
+            'address' => 'Yogyakarta',
+            'status' => 'INACTIVE',
+            'id_sales' => 6,
         ]);
     }
 }
